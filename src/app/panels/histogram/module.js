@@ -88,6 +88,11 @@ function (angular, app, $, _, kbn, moment, timeSeries) {
       fill        : 0,
       linewidth   : 3,
       timezone    : 'browser', // browser, utc or a standard timezone
+
+      // date histogram facet parameters
+      preOffset   : 0,
+      postOffset  : 0,
+
       spyable     : true,
       zoomlinks   : true,
       bars        : true,
@@ -198,6 +203,10 @@ function (angular, app, $, _, kbn, moment, timeSeries) {
         );
 
         var facet = $scope.ejs.DateHistogramFacet(id);
+
+        // apply offsets
+        facet.preZone($scope.preOffset);
+        facet.postZone($scope.postOffset);
 
         if($scope.panel.mode === 'count') {
           facet = facet.field($scope.panel.time_field);
