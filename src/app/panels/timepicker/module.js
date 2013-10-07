@@ -41,6 +41,9 @@ function (angular, app, _, moment, kbn) {
       timespan      : '15m',
       timefield     : '@timestamp',
       timeformat    : "",
+      // if the underlying data is offset from UTC, e.g. graylog time_histogram
+      // field, then this can be changed to offset the filter range.
+      offset        : 0,
       refresh       : {
         enable  : false,
         interval: 30,
@@ -243,10 +246,11 @@ function (angular, app, _, moment, kbn) {
 
     // Prefer to pass around Date() objects since interacting with
     // moment objects in libraries that are expecting Date()s can be tricky
+    // also apply filter offset
     function compile_time(time) {
       time = _.clone(time);
-      time.from = time.from.toDate();
-      time.to   = time.to.toDate();
+      time.from = time.from.add('hours', $scope.offset).toDate();
+      time.to   = time.to.add('hours', $scope.offset).toDate();
       return time;
     }
 
