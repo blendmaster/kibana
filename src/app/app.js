@@ -87,6 +87,9 @@ function (angular, $, _, appLevelRequire) {
       .when('/connectionFailed', {
         templateUrl: 'app/partials/connectionFailed.html',
       })
+      .when('/single/:singleIndex/:singleType/:singleId', {
+        templateUrl: 'app/partials/single.html',
+      })
       .when('/dashboard', {
         templateUrl: 'app/partials/dashboard.html',
       })

@@ -120,8 +120,13 @@ function (angular, $, kbn, _, config, moment, Modernizr) {
         default:
           $location.path(config.default_route);
         }
-      // No dashboard in the URL
-      } else {
+      } else if (/^\/single/.test($location.path())) {
+        var index = $routeParams.singleIndex;
+        var type = $routeParams.singleType;
+        var id = $routeParams.singleId;
+
+        self.load_single(index, type, id);
+      } else { // No dashboard in the URL
         // Check if browser supports localstorage, and if there's an old dashboard. If there is,
         // inform the user that they should save their dashboard to Elasticsearch and then set that
         // as their default
@@ -140,6 +145,20 @@ function (angular, $, kbn, _, config, moment, Modernizr) {
           $location.path(config.default_route);
         }
       }
+    };
+
+    this.load_single = function (index, type, id) {
+      var successcb = function (res) {
+        self.single = res;
+        console.log(res);
+      };
+
+      var errorcb = function (res) {
+        console.log(res);
+      };
+      ejs.client.get(
+          "/"+index+"/"+type+"/"+id+'?',
+          null, successcb, errorcb);
     };
 
     // Since the dashboard is responsible for index computation, we can compute and assign the indices

@@ -1,0 +1,24 @@
+<p>
+  <div class="row">
+    <div class="container-fluid main">
+      <div class="kibana-container container">
+        <div class="span12">
+          <h1>
+            <a class="link" ng-href="{{config.elasticsearch}}/{{dashboard.single | shareLink}}" target="_blank">Document</a></h1>
+
+          <table class='table table-bordered table-condensed table-details'>
+            <thead>
+              <th class="table-details-field">Field</th>
+              <th class="table-details-value">Value</th>
+            </thead>
+            <tr ng-repeat="(key,value) in dashboard.single._source track by $index" ng-class-odd="'odd'">
+              <td style="word-wrap:break-word">{{key}}</td>
+              <!-- At some point we need to create a more efficient way of applying the filter pipeline -->
+              <td style="white-space:pre-wrap;word-wrap:break-word" ng-bind-html="value|noXml|urlLink|stringify"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</p>

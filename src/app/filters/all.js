@@ -130,4 +130,47 @@ define([
     };
   });
 
+  module.filter('tableJson', function() {
+    var json;
+    return function(text,prettyLevel) {
+      if (!_.isUndefined(text) && !_.isNull(text) && text.toString().length > 0) {
+        json = angular.toJson(text,prettyLevel > 0 ? true : false);
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        if(prettyLevel > 1) {
+          /* jshint maxlen: false */
+          json = json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+              if (/:$/.test(match)) {
+                cls = 'key strong';
+              } else {
+                cls = '';
+              }
+            } else if (/true|false/.test(match)) {
+              cls = 'boolean';
+            } else if (/null/.test(match)) {
+              cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+          });
+        }
+        return json;
+      }
+      return '';
+    };
+  });
+
+
+  module.filter('shareLink', function() {
+    return function(event) {
+      if (event == null) {return "";}
+      return event._index + "/" + event._type + "/" + event._id + "/_source";
+    };
+  });
+
+  module.filter('singleLink', function() {
+    return function(event) {
+      return "single/" + event._index + "/" + event._type + "/" + event._id;
+    };
+  });
 });
